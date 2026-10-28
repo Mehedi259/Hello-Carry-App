@@ -51,6 +51,8 @@ class _QuickTrackerCardState extends State<QuickTrackerCard> {
   Widget build(BuildContext context) {
     final shipmentProvider = context.watch<ShipmentProvider>();
 
+    final appState = context.watch<AppStateProvider>();
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -59,7 +61,7 @@ class _QuickTrackerCardState extends State<QuickTrackerCard> {
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -83,20 +85,20 @@ class _QuickTrackerCardState extends State<QuickTrackerCard> {
                 ),
               ),
               const SizedBox(width: 12),
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Track Your Cargo',
-                    style: TextStyle(
+                    appState.t('trackCargo'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   Text(
-                    'Enter tracking number to get real-time status',
-                    style: TextStyle(
+                    appState.t('trackCargoSub'),
+                    style: const TextStyle(
                       fontSize: 11,
                       color: AppColors.textSecondary,
                     ),
@@ -122,7 +124,7 @@ class _QuickTrackerCardState extends State<QuickTrackerCard> {
                 color: AppColors.textPrimary,
               ),
               decoration: InputDecoration(
-                hintText: 'e.g. #HC123456',
+                hintText: appState.t('trackingInputHint'),
                 hintStyle: const TextStyle(
                   color: AppColors.textMuted,
                   fontSize: 13,
@@ -160,9 +162,9 @@ class _QuickTrackerCardState extends State<QuickTrackerCard> {
           // Quick Presets
           Row(
             children: [
-              const Text(
-                'Recent: ',
-                style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+              Text(
+                appState.t('recent'),
+                style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
               ),
               const SizedBox(width: 4),
               _buildQuickPill('#HC123456'),
@@ -194,19 +196,19 @@ class _QuickTrackerCardState extends State<QuickTrackerCard> {
                         color: Colors.white,
                       ),
                     )
-                  : const Row(
+                  : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Track Now',
-                          style: TextStyle(
+                          appState.t('trackNow'),
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Icon(
+                        const SizedBox(width: 8),
+                        const Icon(
                           Icons.arrow_forward_rounded,
                           size: 16,
                           color: Colors.white,
@@ -215,6 +217,7 @@ class _QuickTrackerCardState extends State<QuickTrackerCard> {
                     ),
             ),
           ),
+
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../core/localization/app_strings_local.dart';
 
 enum ActiveRoute {
   bdToOman,
@@ -13,15 +14,31 @@ enum ActiveRoute {
 }
 
 class AppStateProvider extends ChangeNotifier {
+  bool _isOnboarded = false; // Start on Onboarding screen
   int _currentNavIndex = 0;
   ActiveRoute _activeRoute = ActiveRoute.bdToOman;
   String _selectedCurrency = 'USD'; // 'USD', 'OMR', 'BDT'
-  String _selectedLanguage = 'English';
+  String _selectedLanguage = 'English'; // 'English' or 'বাংলা'
 
+  bool get isOnboarded => _isOnboarded;
   int get currentNavIndex => _currentNavIndex;
   ActiveRoute get activeRoute => _activeRoute;
   String get selectedCurrency => _selectedCurrency;
   String get selectedLanguage => _selectedLanguage;
+
+  bool get isBengali => AppLocal.isBn(_selectedLanguage);
+
+  String t(String key) => AppLocal.t(key, _selectedLanguage);
+
+  void completeOnboarding() {
+    _isOnboarded = true;
+    notifyListeners();
+  }
+
+  void resetOnboarding() {
+    _isOnboarded = false;
+    notifyListeners();
+  }
 
   void setNavIndex(int index) {
     if (_currentNavIndex != index) {

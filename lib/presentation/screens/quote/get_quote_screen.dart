@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_assets.dart';
 import '../../../providers/quote_provider.dart';
+import '../../../providers/app_state_provider.dart';
 import '../../widgets/country_flag_pill.dart';
 
 class GetQuoteScreen extends StatefulWidget {
@@ -45,6 +46,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
 
   void _submit() {
     final quoteProvider = context.read<QuoteProvider>();
+    final appState = context.read<AppStateProvider>();
     quoteProvider.setDescription(_descController.text);
     final quote = quoteProvider.submitQuote();
 
@@ -71,9 +73,9 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Quote Request Submitted!',
-              style: TextStyle(
+            Text(
+              appState.t('quoteSubmittedTitle'),
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
@@ -82,7 +84,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              'Reference ID: ${quote.id}',
+              '${appState.t('referenceId')}: ${quote.id}',
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
@@ -98,13 +100,13 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
               ),
               child: Column(
                 children: [
-                  _buildModalRow('Route', '${quote.pickupCountry} → ${quote.destinationCountry}'),
-                  _buildModalRow('Category', quote.category),
-                  _buildModalRow('Weight', '${quote.weightKg} kg'),
-                  _buildModalRow('Method', quote.shippingMethod),
+                  _buildModalRow(appState.t('route'), '${quote.pickupCountry} → ${quote.destinationCountry}'),
+                  _buildModalRow(appState.t('category'), quote.category),
+                  _buildModalRow(appState.t('weight'), '${quote.weightKg} kg'),
+                  _buildModalRow(appState.t('method'), quote.shippingMethod),
                   const Divider(height: 12),
                   _buildModalRow(
-                    'Estimated Rate',
+                    appState.t('estimatedRate'),
                     '\$${quote.estimatedPriceUSD.toStringAsFixed(0)} (~${quote.estimatedPriceOMR.toStringAsFixed(1)} OMR)',
                     isBold: true,
                   ),
@@ -112,10 +114,12 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Our Oman & Dhaka cargo team will contact you within 30 minutes with final discounted booking rates.',
+            Text(
+              appState.isBengali
+                  ? 'আমাদের ওমান ও ঢাকা কার্গো টিম আগামী ৩০ মিনিটের মধ্যে সর্বোচ্চ ছাড়সহ বুকিং রেটের জন্য যোগাযোগ করবে।'
+                  : 'Our Oman & Dhaka cargo team will contact you within 30 minutes with final discounted booking rates.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+              style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -126,7 +130,7 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                   Navigator.pop(ctx);
                   Navigator.pop(context); // return to previous screen
                 },
-                child: const Text('Back to Home'),
+                child: Text(appState.t('backToHome')),
               ),
             ),
           ],
@@ -158,13 +162,14 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
   @override
   Widget build(BuildContext context) {
     final quoteProvider = context.watch<QuoteProvider>();
+    final appState = context.watch<AppStateProvider>();
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Get a Quote',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.t('getQuote'),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
       ),
       body: SingleChildScrollView(
@@ -215,19 +220,19 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                       right: 16,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
-                            'Get a Quote for Your Shipment',
-                            style: TextStyle(
+                            appState.t('getQuoteTitle'),
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 17,
                               fontWeight: FontWeight.w800,
                             ),
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
-                            "Tell us what you want to ship and we'll calculate the best rate.",
-                            style: TextStyle(
+                            appState.t('getQuoteSub'),
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 11,
                             ),
@@ -254,9 +259,9 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Category Dropdown
-                  const Text(
-                    'Product Category',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                  Text(
+                    appState.t('productCategory'),
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
                   Container(
@@ -286,26 +291,26 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                   const SizedBox(height: 16),
 
                   // Description
-                  const Text(
-                    'Product Description (Optional)',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                  Text(
+                    appState.t('productDesc'),
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     controller: _descController,
                     maxLines: 2,
                     style: const TextStyle(fontSize: 13),
-                    decoration: const InputDecoration(
-                      hintText: 'Describe items, brand, fragile requirements...',
+                    decoration: InputDecoration(
+                      hintText: appState.t('descHint'),
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
                   // Estimated Weight
-                  const Text(
-                    'Estimated Weight',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                  Text(
+                    appState.t('estimatedWeight'),
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -359,17 +364,17 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                   const SizedBox(height: 16),
 
                   // Shipping Method (Air Cargo vs Sea Freight)
-                  const Text(
-                    'Shipping Method',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                  Text(
+                    appState.t('shippingMethod'),
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Expanded(
                         child: _buildMethodCard(
-                          title: 'Air Cargo Express',
-                          speed: '3 - 5 Days',
+                          title: appState.t('airCargoExpress'),
+                          speed: appState.t('speedAir'),
                           icon: Icons.flight_takeoff_rounded,
                           isSelected: quoteProvider.shippingMethod == 'Air Cargo',
                           onTap: () => quoteProvider.setShippingMethod('Air Cargo'),
@@ -378,8 +383,8 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _buildMethodCard(
-                          title: 'Sea Freight Economy',
-                          speed: '15 - 20 Days',
+                          title: appState.t('seaFreightEconomy'),
+                          speed: appState.t('speedSea'),
                           icon: Icons.directions_boat_filled_rounded,
                           isSelected: quoteProvider.shippingMethod == 'Sea Freight',
                           onTap: () => quoteProvider.setShippingMethod('Sea Freight'),
@@ -391,9 +396,9 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                   const SizedBox(height: 16),
 
                   // Pickup & Destination Route
-                  const Text(
-                    'Pickup & Destination Route',
-                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                  Text(
+                    appState.t('pickupRoute'),
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
                   ),
                   const SizedBox(height: 8),
                   Container(
@@ -408,7 +413,9 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                       children: [
                         CountryFlagPill(
                           countryCode: quoteProvider.pickupCountry == 'Bangladesh' ? 'BD' : 'OM',
-                          countryName: quoteProvider.pickupCountry,
+                          countryName: quoteProvider.pickupCountry == 'Bangladesh'
+                              ? appState.t('bangladesh')
+                              : appState.t('oman'),
                         ),
                         IconButton(
                           onPressed: () => quoteProvider.toggleRoute(),
@@ -416,7 +423,9 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                         ),
                         CountryFlagPill(
                           countryCode: quoteProvider.destinationCountry == 'Oman' ? 'OM' : 'BD',
-                          countryName: quoteProvider.destinationCountry,
+                          countryName: quoteProvider.destinationCountry == 'Oman'
+                              ? appState.t('oman')
+                              : appState.t('bangladesh'),
                         ),
                       ],
                     ),
@@ -438,9 +447,9 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Estimated Total Rate',
-                              style: TextStyle(
+                            Text(
+                              appState.t('estimatedTotalRate'),
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textSecondary,
@@ -489,9 +498,9 @@ class _GetQuoteScreenState extends State<GetQuoteScreen> {
                     height: 50,
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.send_rounded, size: 18),
-                      label: const Text(
-                        'Submit Request',
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                      label: Text(
+                        appState.t('submitRequest'),
+                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                       ),
                       onPressed: _submit,
                     ),

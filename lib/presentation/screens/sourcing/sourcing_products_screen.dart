@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../providers/sourcing_provider.dart';
+import '../../../providers/app_state_provider.dart';
 import 'widgets/product_card.dart';
 import 'product_details_screen.dart';
 
@@ -26,21 +27,28 @@ class _SourcingProductsScreenState extends State<SourcingProductsScreen> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<SourcingProvider>();
+    final appState = context.watch<AppStateProvider>();
     final products = provider.filteredProducts;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Sourcing Products',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.t('sourcingProducts'),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.tune_rounded),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Filter dialog: All categories active')),
+                SnackBar(
+                  content: Text(
+                    appState.isBengali
+                        ? 'ফিল্টার: সকল ক্যাটাগরি সক্রিয়'
+                        : 'Filter dialog: All categories active',
+                  ),
+                ),
               );
             },
           ),
@@ -61,7 +69,9 @@ class _SourcingProductsScreenState extends State<SourcingProductsScreen> {
                 controller: _searchController,
                 style: const TextStyle(fontSize: 14),
                 decoration: InputDecoration(
-                  hintText: 'Search products by name or category...',
+                  hintText: appState.isBengali
+                      ? 'পণ্য বা ক্যাটাগরি দিয়ে খুঁজুন...'
+                      : 'Search products by name or category...',
                   prefixIcon: const Icon(Icons.search_rounded, color: AppColors.textMuted),
                   suffixIcon: _searchController.text.isNotEmpty
                       ? IconButton(
@@ -131,11 +141,13 @@ class _SourcingProductsScreenState extends State<SourcingProductsScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.inventory_2_outlined, size: 48, color: AppColors.textMuted),
+                        const Icon(Icons.inventory_2_outlined, size: 48, color: AppColors.textMuted),
                         const SizedBox(height: 12),
-                        const Text(
-                          'No products found matching criteria',
-                          style: TextStyle(
+                        Text(
+                          appState.isBengali
+                              ? 'কোনো পণ্য পাওয়া যায়নি'
+                              : 'No products found matching criteria',
+                          style: const TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             color: AppColors.textSecondary,

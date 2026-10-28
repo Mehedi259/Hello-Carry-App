@@ -5,7 +5,6 @@ import '../../../core/constants/app_strings.dart';
 import '../../../providers/app_state_provider.dart';
 import '../../../data/mock/mock_data.dart';
 
-
 class ProfileScreen extends StatelessWidget {
   final Function(int)? onNavigate;
 
@@ -19,9 +18,9 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.t('profile'),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         actions: [
           IconButton(
@@ -108,15 +107,15 @@ class ProfileScreen extends StatelessWidget {
                   const Divider(color: AppColors.borderLight, height: 1),
                   const SizedBox(height: 14),
 
-                  // Stats row: 5 Total | 2 In Transit | 3 Delivered
+                  // Stats row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildStatColumn('${user.totalShipments}', 'Total Shipments', AppColors.accent),
+                      _buildStatColumn('${user.totalShipments}', appState.t('totalShipments'), AppColors.accent),
                       _buildVerticalDivider(),
-                      _buildStatColumn('${user.inTransitCount}', 'In Transit', AppColors.warning),
+                      _buildStatColumn('${user.inTransitCount}', appState.t('inTransit'), AppColors.warning),
                       _buildVerticalDivider(),
-                      _buildStatColumn('${user.deliveredCount}', 'Delivered', AppColors.success),
+                      _buildStatColumn('${user.deliveredCount}', appState.t('delivered'), AppColors.success),
                     ],
                   ),
                 ],
@@ -134,30 +133,27 @@ class ProfileScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
+                  // Language Selection Tile
                   _buildProfileTile(
-                    icon: Icons.person_outline_rounded,
-                    title: 'Personal Information',
-                    subtitle: 'Full name, phone, NID & passport',
+                    icon: Icons.language_rounded,
+                    title: appState.t('language'),
+                    subtitle: appState.selectedLanguage,
+                    trailingWidget: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _buildLangChoice('English', !appState.isBengali, () => appState.setLanguage('English')),
+                        const SizedBox(width: 6),
+                        _buildLangChoice('বাংলা', appState.isBengali, () => appState.setLanguage('বাংলা')),
+                      ],
+                    ),
                     onTap: () {},
                   ),
                   const Divider(color: AppColors.borderLight, height: 1),
-                  _buildProfileTile(
-                    icon: Icons.location_on_outlined,
-                    title: 'Shipping Addresses',
-                    subtitle: 'Saved delivery points in BD & Oman',
-                    onTap: () {},
-                  ),
-                  const Divider(color: AppColors.borderLight, height: 1),
-                  _buildProfileTile(
-                    icon: Icons.credit_card_rounded,
-                    title: 'Payment Methods',
-                    subtitle: 'Cards, bKash, Bank Muscat, Thawani',
-                    onTap: () {},
-                  ),
-                  const Divider(color: AppColors.borderLight, height: 1),
+
+                  // Currency Preference
                   _buildProfileTile(
                     icon: Icons.currency_exchange_rounded,
-                    title: 'Currency Preference',
+                    title: appState.t('currencyPreference'),
                     subtitle: 'Current: ${appState.selectedCurrency}',
                     trailingWidget: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -187,10 +183,39 @@ class ProfileScreen extends StatelessWidget {
                     onTap: () {},
                   ),
                   const Divider(color: AppColors.borderLight, height: 1),
+
+                  _buildProfileTile(
+                    icon: Icons.person_outline_rounded,
+                    title: appState.t('personalInfo'),
+                    subtitle: appState.t('personalInfoSub'),
+                    onTap: () {},
+                  ),
+                  const Divider(color: AppColors.borderLight, height: 1),
+                  _buildProfileTile(
+                    icon: Icons.location_on_outlined,
+                    title: appState.t('shippingAddresses'),
+                    subtitle: appState.t('shippingAddressesSub'),
+                    onTap: () {},
+                  ),
+                  const Divider(color: AppColors.borderLight, height: 1),
+                  _buildProfileTile(
+                    icon: Icons.credit_card_rounded,
+                    title: appState.t('paymentMethods'),
+                    subtitle: appState.t('paymentMethodsSub'),
+                    onTap: () {},
+                  ),
+                  const Divider(color: AppColors.borderLight, height: 1),
+                  _buildProfileTile(
+                    icon: Icons.restart_alt_rounded,
+                    title: 'Onboarding Intro',
+                    subtitle: 'View introduction slides again',
+                    onTap: () => appState.resetOnboarding(),
+                  ),
+                  const Divider(color: AppColors.borderLight, height: 1),
                   _buildProfileTile(
                     icon: Icons.headset_mic_outlined,
-                    title: 'Help & Support',
-                    subtitle: 'FAQs, chat, and hotline',
+                    title: appState.t('helpSupport'),
+                    subtitle: appState.t('helpSupportSub'),
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Helpline: +968 9123-4567 / support@hellocarry.com')),
@@ -200,15 +225,15 @@ class ProfileScreen extends StatelessWidget {
                   const Divider(color: AppColors.borderLight, height: 1),
                   _buildProfileTile(
                     icon: Icons.description_outlined,
-                    title: 'Terms & Conditions',
-                    subtitle: 'Cargo policy, insurance guidelines',
+                    title: appState.t('termsConditions'),
+                    subtitle: appState.t('termsConditionsSub'),
                     onTap: () {},
                   ),
                   const Divider(color: AppColors.borderLight, height: 1),
                   _buildProfileTile(
                     icon: Icons.logout_rounded,
-                    title: 'Log Out',
-                    subtitle: 'Sign out of current device session',
+                    title: appState.t('logOut'),
+                    subtitle: appState.t('logOutSub'),
                     iconColor: AppColors.error,
                     textColor: AppColors.error,
                     onTap: () {
@@ -227,7 +252,7 @@ class ProfileScreen extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  AppStrings.companySisterConcern,
+                  appState.t('companySisterConcern'),
                   style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -253,6 +278,27 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLangChoice(String name, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.accent : AppColors.surfaceSubtle,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          name,
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? Colors.white : AppColors.textPrimary,
+          ),
         ),
       ),
     );

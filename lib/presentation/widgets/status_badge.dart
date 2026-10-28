@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../data/models/shipment.dart';
+import '../../providers/app_state_provider.dart';
 
 class StatusBadge extends StatelessWidget {
   final ShipmentStatus status;
@@ -8,6 +10,7 @@ class StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -31,7 +34,7 @@ class StatusBadge extends StatelessWidget {
           ),
           const SizedBox(width: 5),
           Text(
-            status.displayName,
+            status.localizedName(appState.isBengali),
             style: TextStyle(
               color: status.color,
               fontSize: 12,

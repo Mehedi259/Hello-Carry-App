@@ -70,18 +70,18 @@ class HeroBannerWidget extends StatelessWidget {
                         width: 1,
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.verified_rounded,
                           size: 13,
                           color: AppColors.accentCyan,
                         ),
-                        SizedBox(width: 4),
+                        const SizedBox(width: 4),
                         Text(
-                          'Direct BD - Oman Cargo Service',
-                          style: TextStyle(
+                          appState.t('directBadge'),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
@@ -94,22 +94,22 @@ class HeroBannerWidget extends StatelessWidget {
                   const SizedBox(height: 12),
 
                   // Hero Title
-                  const Text(
-                    'Ship Smarter\nBetween Bangladesh\n& Oman',
-                    style: TextStyle(
+                  Text(
+                    appState.t('heroTitle'),
+                    style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 22,
+                      fontSize: 21,
                       fontWeight: FontWeight.w800,
-                      height: 1.2,
+                      height: 1.25,
                       letterSpacing: -0.4,
                     ),
                   ),
 
                   const SizedBox(height: 8),
 
-                  const Text(
-                    'Your trusted cargo partner for air express & sea freight shipments.',
-                    style: TextStyle(
+                  Text(
+                    appState.t('heroSubtitle'),
+                    style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -138,7 +138,7 @@ class HeroBannerWidget extends StatelessWidget {
                         children: [
                           CountryFlagPill(
                             countryCode: isBDOrigin ? 'BD' : 'OM',
-                            countryName: isBDOrigin ? 'Bangladesh' : 'Oman',
+                            countryName: isBDOrigin ? appState.t('bangladesh') : appState.t('oman'),
                             isDark: true,
                           ),
                           Padding(
@@ -158,13 +158,14 @@ class HeroBannerWidget extends StatelessWidget {
                           ),
                           CountryFlagPill(
                             countryCode: isBDOrigin ? 'OM' : 'BD',
-                            countryName: isBDOrigin ? 'Oman' : 'Bangladesh',
+                            countryName: isBDOrigin ? appState.t('oman') : appState.t('bangladesh'),
                             isDark: true,
                           ),
                         ],
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_assets.dart';
+import '../../../providers/app_state_provider.dart';
 import '../../../providers/shipment_provider.dart';
-
 import '../../../providers/sourcing_provider.dart';
 import '../../../providers/notification_provider.dart';
 import '../../widgets/section_header.dart';
@@ -23,9 +23,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
     final shipmentProvider = context.watch<ShipmentProvider>();
     final sourcingProvider = context.watch<SourcingProvider>();
     final notificationProvider = context.watch<NotificationProvider>();
+
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -150,9 +152,9 @@ class HomeScreen extends StatelessWidget {
 
             // 4. Live Active Shipment
             SectionHeader(
-              title: 'Active Shipment',
-              subtitle: 'Real-time status of your cargo',
-              actionText: 'View All',
+              title: appState.t('activeShipment'),
+              subtitle: appState.t('activeShipmentSub'),
+              actionText: appState.t('viewAll'),
               onActionTap: () => onNavigate(3), // Shipments tab
             ),
 
@@ -176,9 +178,9 @@ class HomeScreen extends StatelessWidget {
 
             // 5. Sourcing Products Section
             SectionHeader(
-              title: 'Sourcing Products',
-              subtitle: 'Explore popular products you can source & ship',
-              actionText: 'View All',
+              title: appState.t('sourcingProducts'),
+              subtitle: appState.t('sourcingProductsSub'),
+              actionText: appState.t('viewAll'),
               onActionTap: () => onNavigate(2), // Sourcing tab
             ),
 
@@ -242,21 +244,21 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hello Carry Security Guarantee',
-                              style: TextStyle(
+                              appState.t('securityGuarantee'),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
                             Text(
-                              '100% cargo insurance & full customs clearance support',
-                              style: TextStyle(
+                              appState.t('securityGuaranteeSub'),
+                              style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 11,
                               ),
@@ -270,14 +272,15 @@ class HomeScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _buildTrustPoint(Icons.airplanemode_active_rounded, 'Air: 3-5 Days'),
-                      _buildTrustPoint(Icons.directions_boat_rounded, 'Sea: Low Cost'),
-                      _buildTrustPoint(Icons.door_front_door_rounded, 'Door Delivery'),
+                      _buildTrustPoint(Icons.airplanemode_active_rounded, appState.t('airSpeed')),
+                      _buildTrustPoint(Icons.directions_boat_rounded, appState.t('seaCost')),
+                      _buildTrustPoint(Icons.door_front_door_rounded, appState.t('doorDelivery')),
                     ],
                   ),
                 ],
               ),
             ),
+
 
             const SizedBox(height: 20),
           ],

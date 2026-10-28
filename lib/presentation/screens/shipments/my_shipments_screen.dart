@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../../providers/app_state_provider.dart';
 import '../../../providers/shipment_provider.dart';
 import '../tracking/shipment_details_screen.dart';
 import 'widgets/shipment_list_tile.dart';
@@ -36,17 +37,27 @@ class _MyShipmentsScreenState extends State<MyShipmentsScreen>
     super.dispose();
   }
 
+  String _getTabLabel(String key, AppStateProvider appState) {
+    if (key == 'All') return appState.isBengali ? 'সকল' : 'All';
+    if (key == 'In Transit') return appState.t('inTransit');
+    if (key == 'Delivered') return appState.t('delivered');
+    if (key == 'Processing') return appState.t('processing');
+    if (key == 'Cancelled') return appState.t('cancelled');
+    return key;
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
     final shipmentProvider = context.watch<ShipmentProvider>();
     final shipments = shipmentProvider.filteredShipments;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'My Shipments',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.t('myShipments'),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
@@ -68,7 +79,7 @@ class _MyShipmentsScreenState extends State<MyShipmentsScreen>
               unselectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
               dividerColor: Colors.transparent,
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+              tabs: _tabs.map((tab) => Tab(text: _getTabLabel(tab, appState))).toList(),
             ),
           ),
         ),
@@ -78,14 +89,14 @@ class _MyShipmentsScreenState extends State<MyShipmentsScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.inventory_2_outlined,
                     size: 52,
                     color: AppColors.textMuted,
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'No ${shipmentProvider.selectedStatusFilter} Shipments Found',
+                    appState.t('noShipments'),
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -93,9 +104,9 @@ class _MyShipmentsScreenState extends State<MyShipmentsScreen>
                     ),
                   ),
                   const SizedBox(height: 6),
-                  const Text(
-                    'Your cargo shipments will appear here once booked',
-                    style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  Text(
+                    appState.t('noShipmentsSub'),
+                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
                   ),
                 ],
               ),

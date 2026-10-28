@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/app_state_provider.dart';
 import '../../providers/notification_provider.dart';
+import 'onboarding/onboarding_screen.dart';
 import 'home/home_screen.dart';
 import 'tracking/track_cargo_screen.dart';
 import 'sourcing/sourcing_products_screen.dart';
@@ -19,6 +20,14 @@ class MainNavigationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final appState = context.watch<AppStateProvider>();
     final notificationProvider = context.watch<NotificationProvider>();
+
+    // Show onboarding flow if user hasn't completed it
+    if (!appState.isOnboarded) {
+      return OnboardingScreen(
+        onFinished: () => appState.completeOnboarding(),
+      );
+    }
+
     final currentIndex = appState.currentNavIndex;
 
     // Sub-screens list
@@ -63,35 +72,35 @@ class MainNavigationScreen extends StatelessWidget {
                   context,
                   index: 0,
                   icon: Icons.home_rounded,
-                  label: 'Home',
+                  label: appState.t('navHome'),
                   isSelected: bottomNavActiveIndex == 0 && currentIndex < 5,
                 ),
                 _buildNavItem(
                   context,
                   index: 1,
                   icon: Icons.explore_rounded,
-                  label: 'Track',
+                  label: appState.t('navTrack'),
                   isSelected: bottomNavActiveIndex == 1 && currentIndex < 5,
                 ),
                 _buildNavItem(
                   context,
                   index: 2,
                   icon: Icons.inventory_2_rounded,
-                  label: 'Products',
+                  label: appState.t('navProducts'),
                   isSelected: bottomNavActiveIndex == 2 && currentIndex < 5,
                 ),
                 _buildNavItem(
                   context,
                   index: 3,
                   icon: Icons.local_shipping_rounded,
-                  label: 'Shipments',
+                  label: appState.t('navShipments'),
                   isSelected: bottomNavActiveIndex == 3 && currentIndex < 5,
                 ),
                 _buildNavItem(
                   context,
                   index: 4,
                   icon: Icons.person_rounded,
-                  label: 'Profile',
+                  label: appState.t('navProfile'),
                   isSelected: bottomNavActiveIndex == 4 && currentIndex < 5,
                   badgeCount: notificationProvider.unreadCount > 0 ? notificationProvider.unreadCount : null,
                 ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../data/models/product.dart';
+import '../../../providers/app_state_provider.dart';
 import '../quote/get_quote_screen.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
@@ -10,19 +12,27 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Product Details',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.isBengali ? 'পণ্যের বিস্তারিত' : 'Product Details',
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.bookmark_border_rounded),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Saved "${product.name}" to favorites')),
+                SnackBar(
+                  content: Text(
+                    appState.isBengali
+                        ? 'পছন্দের তালিকায় সংরক্ষিত: "${product.name}"'
+                        : 'Saved "${product.name}" to favorites',
+                  ),
+                ),
               );
             },
           ),
@@ -30,7 +40,13 @@ class ProductDetailsScreen extends StatelessWidget {
             icon: const Icon(Icons.share_outlined),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Product link copied to clipboard')),
+                SnackBar(
+                  content: Text(
+                    appState.isBengali
+                        ? 'প্রোডাক্ট লিংক কপি করা হয়েছে'
+                        : 'Product link copied to clipboard',
+                  ),
+                ),
               );
             },
           ),
@@ -120,14 +136,14 @@ class ProductDetailsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: AppColors.success.withValues(alpha: 0.3)),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.check_circle_rounded, color: AppColors.success, size: 14),
-                      SizedBox(width: 4),
+                      const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 14),
+                      const SizedBox(width: 4),
                       Text(
-                        'Available for Sourcing',
-                        style: TextStyle(
+                        appState.t('availableForSourcing'),
+                        style: const TextStyle(
                           color: AppColors.success,
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
@@ -157,9 +173,9 @@ class ProductDetailsScreen extends StatelessWidget {
             const SizedBox(height: 18),
 
             // Description
-            const Text(
-              'Description',
-              style: TextStyle(
+            Text(
+              appState.t('description'),
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
@@ -178,9 +194,9 @@ class ProductDetailsScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Key Features
-            const Text(
-              'Key Features',
-              style: TextStyle(
+            Text(
+              appState.t('keyFeatures'),
+              style: const TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
@@ -237,17 +253,17 @@ class ProductDetailsScreen extends StatelessWidget {
                 children: [
                   const Icon(Icons.flight_takeoff_rounded, color: AppColors.accent, size: 24),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Door-to-Door Delivery Available',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+                          appState.t('doorDeliveryAvailable'),
+                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
                         ),
                         Text(
-                          'Estimated Air Shipping to Oman: 3-5 business days',
-                          style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                          appState.t('estimatedAir'),
+                          style: const TextStyle(fontSize: 11, color: AppColors.textSecondary),
                         ),
                       ],
                     ),
@@ -278,9 +294,9 @@ class ProductDetailsScreen extends StatelessWidget {
           height: 50,
           child: ElevatedButton.icon(
             icon: const Icon(Icons.request_quote_rounded, size: 20),
-            label: const Text(
-              'Request Sourcing & Shipping Quote',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+            label: Text(
+              appState.t('requestQuoteForProduct'),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
             ),
             onPressed: () {
               Navigator.push(

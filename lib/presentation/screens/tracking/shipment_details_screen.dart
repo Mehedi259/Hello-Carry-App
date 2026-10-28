@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../data/models/shipment.dart';
+import '../../../providers/app_state_provider.dart';
 import '../../widgets/status_badge.dart';
 
 class ShipmentDetailsScreen extends StatelessWidget {
@@ -10,19 +12,27 @@ class ShipmentDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Shipment Details',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.t('shipmentDetails'),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.share_outlined),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Waybill link copied for ${shipment.id}')),
+                SnackBar(
+                  content: Text(
+                    appState.isBengali
+                        ? '${shipment.id}-এর ওয়েববিল লিংক কপি করা হয়েছে'
+                        : 'Waybill link copied for ${shipment.id}',
+                  ),
+                ),
               );
             },
           ),
@@ -127,13 +137,13 @@ class ShipmentDetailsScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      _buildMiniStep('Picked Up', 'Oct 20', true),
+                      _buildMiniStep(appState.t('pickedUp'), 'Oct 20', true),
                       _buildMiniLine(true),
-                      _buildMiniStep('In Transit', 'Oct 22', true),
+                      _buildMiniStep(appState.t('inTransit'), 'Oct 22', true),
                       _buildMiniLine(false),
-                      _buildMiniStep('Arriving', 'Oct 25', false),
+                      _buildMiniStep(appState.isBengali ? 'পৌঁছাচ্ছে' : 'Arriving', 'Oct 25', false),
                       _buildMiniLine(false),
-                      _buildMiniStep('Delivered', '--', false),
+                      _buildMiniStep(appState.t('delivered'), '--', false),
                     ],
                   ),
                 ],
@@ -169,9 +179,9 @@ class ShipmentDetailsScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Latest Live Update',
-                          style: TextStyle(
+                        Text(
+                          appState.t('latestLiveUpdate'),
+                          style: const TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                             color: AppColors.accent,
@@ -214,21 +224,21 @@ class ShipmentDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Shipment Information',
-                    style: TextStyle(
+                  Text(
+                    appState.t('shipmentInfo'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 14),
-                  _buildInfoRow('Product Type', shipment.category),
-                  _buildInfoRow('Weight', '${shipment.weightKg} kg'),
-                  _buildInfoRow('Tracking Number', shipment.id),
-                  _buildInfoRow('Shipping Method', shipment.shippingMethod),
-                  _buildInfoRow('Estimated Delivery', shipment.eta),
-                  _buildInfoRow('Created Date', shipment.createdDate),
+                  _buildInfoRow(appState.t('productType'), shipment.category),
+                  _buildInfoRow(appState.t('weight'), '${shipment.weightKg} kg'),
+                  _buildInfoRow(appState.t('trackingNumber'), shipment.id),
+                  _buildInfoRow(appState.t('shippingMethod'), shipment.shippingMethod),
+                  _buildInfoRow(appState.t('estimatedDelivery'), shipment.eta),
+                  _buildInfoRow(appState.t('createdDate'), shipment.createdDate),
                 ],
               ),
             ),
@@ -246,9 +256,9 @@ class ShipmentDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Tracking Journey Timeline',
-                    style: TextStyle(
+                  Text(
+                    appState.t('trackingTimeline'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
@@ -282,9 +292,9 @@ class ShipmentDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Route & Address Details',
-                    style: TextStyle(
+                  Text(
+                    appState.t('routeAddressDetails'),
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
@@ -300,9 +310,9 @@ class ShipmentDetailsScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Sender (Bangladesh)',
-                              style: TextStyle(
+                            Text(
+                              appState.t('senderBD'),
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textMuted,
@@ -341,9 +351,9 @@ class ShipmentDetailsScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Receiver (Oman)',
-                              style: TextStyle(
+                            Text(
+                              appState.t('receiverOM'),
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.textMuted,
@@ -381,10 +391,16 @@ class ShipmentDetailsScreen extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.download_rounded, size: 16),
-                    label: const Text('Download Waybill'),
+                    label: Text(appState.t('downloadWaybill')),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Waybill PDF downloaded successfully')),
+                        SnackBar(
+                          content: Text(
+                            appState.isBengali
+                                ? 'ওয়েবিল PDF সফলভাবে ডাউনলোড হয়েছে'
+                                : 'Waybill PDF downloaded successfully',
+                          ),
+                        ),
                       );
                     },
                   ),
@@ -393,10 +409,16 @@ class ShipmentDetailsScreen extends StatelessWidget {
                 Expanded(
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.support_agent_rounded, size: 16),
-                    label: const Text('Contact Support'),
+                    label: Text(appState.t('contactSupport')),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Connecting to Hello Carry Cargo Agent...')),
+                        SnackBar(
+                          content: Text(
+                            appState.isBengali
+                                ? 'হ্যালো ক্যারি কার্গো এজেন্টের সাথে যুক্ত হচ্ছে...'
+                                : 'Connecting to Hello Carry Cargo Agent...',
+                          ),
+                        ),
                       );
                     },
                   ),

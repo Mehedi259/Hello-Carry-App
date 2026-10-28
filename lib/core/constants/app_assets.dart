@@ -6,6 +6,8 @@ class AppAssets {
   static const String quoteBanner = '$basePath/quote_banner.jpg';
   static const String trackingRouteMap = '$basePath/tracking_route_map.jpg';
   static const String userAvatar = '$basePath/user_avatar.jpg';
+  static const String onboardingWelcome = '$basePath/onboarding_welcome.jpg';
+  static const String onboardingSourcing = '$basePath/onboarding_sourcing.jpg';
 
   // Products
   static const String productIphone = '$basePath/product_iphone.jpg';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_assets.dart';
+import '../../../providers/app_state_provider.dart';
 import '../../../providers/shipment_provider.dart';
 import '../../widgets/status_badge.dart';
 import 'shipment_details_screen.dart';
@@ -35,16 +36,18 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
     final provider = context.watch<ShipmentProvider>();
     final tracked = provider.trackedShipment;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Track Your Cargo',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.t('trackCargo'),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
+
         actions: [
           IconButton(
             icon: const Icon(Icons.qr_code_scanner_rounded),
@@ -95,14 +98,14 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
                           color: AppColors.primary.withValues(alpha: 0.85),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.radar_rounded, color: AppColors.accentCyan, size: 14),
-                            SizedBox(width: 4),
+                            const Icon(Icons.radar_rounded, color: AppColors.accentCyan, size: 14),
+                            const SizedBox(width: 4),
                             Text(
-                              'Live Hub Radar',
-                              style: TextStyle(
+                              appState.t('liveHubRadar'),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
@@ -137,9 +140,9 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Tracking Number',
-                    style: TextStyle(
+                  Text(
+                    appState.t('trackingNumber'),
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
@@ -149,7 +152,7 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
                   TextField(
                     controller: _trackingController,
                     decoration: InputDecoration(
-                      hintText: 'Enter tracking number (e.g. #HC123456)',
+                      hintText: appState.t('trackingInputHint'),
                       suffixIcon: const Icon(Icons.info_outline_rounded, size: 18),
                     ),
                     onSubmitted: (_) => _search(),
@@ -169,9 +172,9 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
                                 color: Colors.white,
                               ),
                             )
-                          : const Text(
-                              'Track Now',
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+                          : Text(
+                              appState.t('trackNow'),
+                              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                             ),
                     ),
                   ),
@@ -250,7 +253,7 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         icon: const Icon(Icons.timeline_rounded, size: 16),
-                        label: const Text('View Full Timeline & Details'),
+                        label: Text(appState.t('viewFullTimeline')),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -269,9 +272,9 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
             const SizedBox(height: 24),
 
             // How It Works Steps
-            const Text(
-              'How It Works?',
-              style: TextStyle(
+            Text(
+              appState.t('howItWorks'),
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
                 color: AppColors.textPrimary,
@@ -285,19 +288,19 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
                 _buildStep(
                   step: '1',
                   icon: Icons.edit_note_rounded,
-                  title: 'Enter\nTracking Number',
+                  title: appState.t('step1'),
                 ),
                 _buildStepDivider(),
                 _buildStep(
                   step: '2',
                   icon: Icons.checklist_rtl_rounded,
-                  title: 'Check\nCurrent Status',
+                  title: appState.t('step2'),
                 ),
                 _buildStepDivider(),
                 _buildStep(
                   step: '3',
                   icon: Icons.track_changes_rounded,
-                  title: 'Get\nLatest Updates',
+                  title: appState.t('step3'),
                 ),
               ],
             ),
@@ -327,22 +330,22 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
                     ),
                   ),
                   const SizedBox(width: 14),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Your cargo is in safe hands',
-                          style: TextStyle(
+                          appState.t('safeHands'),
+                          style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: Color(0xFF166534),
                           ),
                         ),
-                        SizedBox(height: 3),
+                        const SizedBox(height: 3),
                         Text(
-                          'We ensure secure and reliable delivery from Bangladesh to Oman with verified customs documentation.',
-                          style: TextStyle(
+                          appState.t('safeHandsSub'),
+                          style: const TextStyle(
                             fontSize: 11,
                             color: Color(0xFF15803D),
                             height: 1.3,
@@ -354,6 +357,7 @@ class _TrackCargoScreenState extends State<TrackCargoScreen> {
                 ],
               ),
             ),
+
 
             const SizedBox(height: 20),
           ],

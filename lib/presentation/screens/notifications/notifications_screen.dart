@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../providers/notification_provider.dart';
 import '../../../providers/shipment_provider.dart';
+import '../../../providers/app_state_provider.dart';
 import '../tracking/shipment_details_screen.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -13,20 +14,21 @@ class NotificationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final notificationProvider = context.watch<NotificationProvider>();
+    final appState = context.watch<AppStateProvider>();
     final notifications = notificationProvider.notifications;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text(
-          'Notifications',
-          style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+        title: Text(
+          appState.t('notifications'),
+          style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
         ),
         actions: [
           if (notifications.isNotEmpty)
             TextButton.icon(
               icon: const Icon(Icons.done_all_rounded, size: 16),
-              label: const Text('Mark all read', style: TextStyle(fontSize: 12)),
+              label: Text(appState.t('markAllRead'), style: const TextStyle(fontSize: 12)),
               onPressed: () => notificationProvider.markAllAsRead(),
             ),
         ],
@@ -36,24 +38,24 @@ class NotificationsScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.notifications_off_outlined,
                     size: 52,
                     color: AppColors.textMuted,
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    'No Notifications',
-                    style: TextStyle(
+                  Text(
+                    appState.t('noNotifications'),
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    "You're all caught up with your cargo updates!",
-                    style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                  Text(
+                    appState.t('noNotificationsSub'),
+                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
                   ),
                 ],
               ),

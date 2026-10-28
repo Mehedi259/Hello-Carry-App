@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/shipment.dart';
+import '../../../../providers/app_state_provider.dart';
 import '../../../widgets/status_badge.dart';
 
 class ActiveShipmentCard extends StatelessWidget {
@@ -15,6 +17,7 @@ class ActiveShipmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appState = context.watch<AppStateProvider>();
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -110,7 +113,7 @@ class ActiveShipmentCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    'ETA: ${shipment.eta}',
+                    '${appState.t('eta')}: ${shipment.eta}',
                     style: const TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,

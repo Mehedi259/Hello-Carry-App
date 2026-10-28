@@ -137,7 +137,7 @@ class AppSideDrawer extends StatelessWidget {
                 children: [
                   _buildDrawerItem(
                     icon: Icons.home_rounded,
-                    label: AppStrings.navHome,
+                    label: appState.t('navHome'),
                     isSelected: appState.currentNavIndex == 0,
                     onTap: () {
                       Navigator.pop(context);
@@ -146,7 +146,7 @@ class AppSideDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     icon: Icons.explore_rounded,
-                    label: AppStrings.trackCargo,
+                    label: appState.t('trackCargo'),
                     isSelected: appState.currentNavIndex == 1,
                     onTap: () {
                       Navigator.pop(context);
@@ -155,7 +155,7 @@ class AppSideDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     icon: Icons.inventory_2_rounded,
-                    label: AppStrings.sourcingProducts,
+                    label: appState.t('sourcingProducts'),
                     isSelected: appState.currentNavIndex == 2,
                     onTap: () {
                       Navigator.pop(context);
@@ -164,7 +164,7 @@ class AppSideDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     icon: Icons.local_shipping_rounded,
-                    label: AppStrings.myShipments,
+                    label: appState.t('myShipments'),
                     isSelected: appState.currentNavIndex == 3,
                     onTap: () {
                       Navigator.pop(context);
@@ -173,7 +173,7 @@ class AppSideDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     icon: Icons.request_quote_rounded,
-                    label: AppStrings.getQuote,
+                    label: appState.t('getQuote'),
                     isSelected: false,
                     badgeText: 'Instant',
                     badgeColor: AppColors.accentCyan,
@@ -184,7 +184,7 @@ class AppSideDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     icon: Icons.notifications_rounded,
-                    label: 'Notifications',
+                    label: appState.t('notifications'),
                     isSelected: false,
                     badgeText: notificationProvider.unreadCount > 0
                         ? '${notificationProvider.unreadCount}'
@@ -197,7 +197,7 @@ class AppSideDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     icon: Icons.person_rounded,
-                    label: 'Profile',
+                    label: appState.t('navProfile'),
                     isSelected: appState.currentNavIndex == 4,
                     onTap: () {
                       Navigator.pop(context);
@@ -205,9 +205,49 @@ class AppSideDrawer extends StatelessWidget {
                     },
                   ),
                   const Divider(color: AppColors.drawerBorder, height: 16),
+
+                  // Language Switcher Tile in Drawer
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.drawerCard,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.drawerBorder),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(Icons.language_rounded, size: 18, color: AppColors.accentCyan),
+                              const SizedBox(width: 8),
+                              Text(
+                                appState.t('language'),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              _buildDrawerLangBtn('EN', !appState.isBengali, () => appState.setLanguage('English')),
+                              const SizedBox(width: 4),
+                              _buildDrawerLangBtn('বাং', appState.isBengali, () => appState.setLanguage('বাংলা')),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   _buildDrawerItem(
                     icon: Icons.headset_mic_rounded,
-                    label: 'Help & 24/7 Support',
+                    label: appState.t('helpSupport'),
                     isSelected: false,
                     onTap: () {
                       Navigator.pop(context);
@@ -219,14 +259,15 @@ class AppSideDrawer extends StatelessWidget {
                     },
                   ),
                   _buildDrawerItem(
-                    icon: Icons.settings_rounded,
-                    label: 'Settings',
+                    icon: Icons.restart_alt_rounded,
+                    label: 'Onboarding Intro',
                     isSelected: false,
                     onTap: () {
                       Navigator.pop(context);
-                      onNavigate(4); // Navigate to Profile / Settings
+                      appState.resetOnboarding();
                     },
                   ),
+
                 ],
               ),
             ),
@@ -343,6 +384,27 @@ class AppSideDrawer extends StatelessWidget {
         ),
       ),
     );
+  }
 
+  Widget _buildDrawerLangBtn(String title, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.accent : Colors.white10,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Colors.white70,
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
   }
 }
+

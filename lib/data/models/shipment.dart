@@ -23,6 +23,22 @@ enum ShipmentStatus {
     }
   }
 
+  String localizedName(bool isBengali) {
+    if (!isBengali) return displayName;
+    switch (this) {
+      case ShipmentStatus.inTransit:
+        return 'ট্রানজিটে আছে';
+      case ShipmentStatus.delivered:
+        return 'ডেলিভার্ড';
+      case ShipmentStatus.processing:
+        return 'প্রক্রিয়াধীন';
+      case ShipmentStatus.pickedUp:
+        return 'পিকড আপ';
+      case ShipmentStatus.cancelled:
+        return 'বাতিল';
+    }
+  }
+
   Color get color {
     switch (this) {
       case ShipmentStatus.inTransit:
