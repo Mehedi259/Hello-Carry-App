@@ -1,4 +1,4 @@
-package com.helloprobash.hellocarry.hello_carry
+package com.hellocarry.app
 
 import io.flutter.embedding.android.FlutterActivity
 
